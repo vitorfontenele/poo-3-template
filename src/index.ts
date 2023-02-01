@@ -35,6 +35,8 @@ app.get("/ping", async (req: Request, res: Response) => {
 
 app.get("/users", userController.getUsers);
 
+app.get("/users/:id", userController.getUserById);
+
 app.post("/users", userController.createUser);
 
 app.get("/accounts", accountController.getAccounts);

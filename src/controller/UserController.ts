@@ -35,6 +35,42 @@ export class UserController {
         }
     }
 
+    public getUserById = async (req: Request, res: Response) => {
+        try {
+            const id = req.params.id;
+
+            // Verificar se existe user com esse id
+            const userDatabase = new UserDatabase();
+            const userDB = await userDatabase.findUserById(id);
+            if (!userDB){
+                res.status(404);
+                throw new Error ("Não foi encontrado user com esse 'id'");
+            }
+
+            const user = {
+                id: userDB.id,
+                name: userDB.name,
+                email: userDB.email,
+                password: userDB.password,
+                createdAt: userDB.created_at
+            }
+
+            res.status(200).send(user);
+        } catch (error) {
+            console.log(error)
+
+            if (req.statusCode === 200) {
+                res.status(500)
+            }
+
+            if (error instanceof Error) {
+                res.send(error.message)
+            } else {
+                res.send("Erro inesperado")
+            }
+        }
+    }
+
     public createUser = async (req: Request, res: Response) => {
         try {
             const { id, name, email, password } = req.body
